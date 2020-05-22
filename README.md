@@ -13,6 +13,6 @@ Sinta-se livre para clonar o repositorio e efetuar melhorias.
 
 -Acesse os arquivos em sua maquina.
 
--execute o comando yarn para baixar todas as dependencias.
+-execute o comando yarn para baixar todas as dependências.
 
 -Execute o servidor de desenvolvimento com o comando yarn dev e efetue as desejadas alterações no projeto.
