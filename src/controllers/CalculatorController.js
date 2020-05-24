@@ -96,15 +96,19 @@ class CalculatorControler {
     }
   }
 
+  lastPosition() {
+    return this.value[this.value.length - 1];
+  }
+
   handleOperations(operations) {
     if (this.value.length === 0) {
       return;
-    } else if (typeof this.value[this.value.length - 1] !== 'string') {
+    } else if (typeof this.lastPosition() !== 'string') {
       this.value.push(operations);
-      this.display.innerHTML = this.value.join().toString().replace(/,/g, '');
-    } else if (typeof this.value[this.value.length - 1] === 'string') {
-      this.value[this.value.length - 1] = operations;
-      this.display.innerHTML = this.value.join().toString().replace(/,/g, '');
+      this.display.innerHTML = this.replacePercentage();
+    } else if (typeof this.lastPosition() === 'string') {
+      this.lastPosition = operations;
+      this.display.innerHTML = this.replacePercentage();
     }
   }
 
@@ -115,7 +119,7 @@ class CalculatorControler {
     }
     if (typeof num === 'number') {
       this.value.push(num);
-      this.display.innerHTML = this.value.join().toString().replace(/,/g, '');
+      this.display.innerHTML = this.replacePercentage();
     } else {
       return;
     }
@@ -126,12 +130,15 @@ class CalculatorControler {
     this.value = [];
   }
 
+  replacePercentage() {
+    return this.value.join().toString().replace(/,/g, '');
+  }
+
   handlePercentual() {
-    if (typeof this.value[this.value.length - 1] === 'number') {
+    if (typeof this.lastPosition() === 'number') {
       const formula = '%';
       this.value.push(formula);
-      this.display.innerHTML = this.value.join().toString().replace(/,/g, '');
-      console.log(this.value);
+      this.display.innerHTML = this.replacePercentage();
     }
   }
 
@@ -139,16 +146,21 @@ class CalculatorControler {
     if (this.value.length < 2) {
       return;
     }
-    if (this.value[this.value.indexOf('%')] && this.value.length !== 0) {
-      const findOcorrence = this.value.findIndex(item => item === '%');
-      this.value[findOcorrence] = '/100*';
-      let results = eval(this.value.join(''));
-      this.display.innerHTML = results;
-      this.value = [results];
-    } else {
-      let results = eval(this.value.join(''));
-      this.display.innerHTML = results;
-      this.value = [results];
+    try {
+      if (this.value[this.value.indexOf('%')] && this.value.length !== 0) {
+        const findOcorrence = this.value.findIndex(item => item === '%');
+        this.value[findOcorrence] = '/100*';
+        let results = eval(this.value.join(''));
+        this.display.innerHTML = results;
+        this.value = [results];
+      } else {
+        let results = eval(this.value.join(''));
+        this.display.innerHTML = results;
+        this.value = [results];
+      }
+    } catch (err) {
+      alert('Operação não permitida');
+      this.value = [];
     }
   }
 }
